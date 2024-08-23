@@ -21,14 +21,18 @@ namespace MA.Common
 {
     public class KeyGeneratorService : IKeyGeneratorService
     {
-        private const string GeneratedKeyFilePath = "key.info";
+
+        private const string GeneratedKeyFileName = "key.info";
         private static readonly object LockObject = new();
         private static readonly object InitializationLockObject = new();
         private ulong lastGeneratedUlongId;
         private DateTime lastSnapshotTime = DateTime.UtcNow;
+        private readonly bool canAccessFile;
+        private readonly string filePath = GeneratedKeyFileName;
 
-        public KeyGeneratorService()
+        public KeyGeneratorService(ILoggingDirectoryProvider loggingDirectoryProvider)
         {
+
             lock (InitializationLockObject)
             {
                 if (this.lastGeneratedUlongId != 0)
@@ -36,14 +40,23 @@ namespace MA.Common
                     return;
                 }
 
-                if (!File.Exists(GeneratedKeyFilePath))
+                this.filePath = Path.Combine(loggingDirectoryProvider.Provide(), GeneratedKeyFileName);
+                if (!File.Exists(this.filePath))
                 {
                     var snapshotTime = DateTime.UtcNow;
-                    File.WriteAllText(GeneratedKeyFilePath, snapshotTime.Ticks.ToString());
+                    try
+                    {
+                        File.WriteAllText(this.filePath, snapshotTime.Ticks.ToString());
+                        this.canAccessFile = true;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Can't Write Key.Info File");
+                    }
                     this.lastSnapshotTime = snapshotTime;
                 }
 
-                if (!ulong.TryParse(File.ReadAllText(GeneratedKeyFilePath), out this.lastGeneratedUlongId))
+                if (!this.canAccessFile || !ulong.TryParse(File.ReadAllText(this.filePath), out this.lastGeneratedUlongId))
                 {
                     this.GenerateUniqueUlongId();
                 }
@@ -73,11 +86,14 @@ namespace MA.Common
 
                 this.lastGeneratedUlongId = currentTicks;
 
-                if ((this.lastSnapshotTime - dateTime).TotalMilliseconds > 500)
+                if (!this.canAccessFile ||
+                    (this.lastSnapshotTime - dateTime).TotalMilliseconds <= 500)
                 {
-                    File.WriteAllText(GeneratedKeyFilePath, this.lastGeneratedUlongId.ToString());
-                    this.lastSnapshotTime = dateTime;
+                    return currentTicks;
                 }
+
+                File.WriteAllText(this.filePath, this.lastGeneratedUlongId.ToString());
+                this.lastSnapshotTime = dateTime;
 
                 return currentTicks;
             }
