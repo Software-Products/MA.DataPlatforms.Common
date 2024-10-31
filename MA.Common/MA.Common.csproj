@@ -10,6 +10,7 @@
       <Authors>McLaren Applied</Authors>
       <Copyright></Copyright>
       <Description>Library containing common utilities, classes and abstractions.</Description>
+	  <RepositoryUrl>https://github.com/mat-docs/packages</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
