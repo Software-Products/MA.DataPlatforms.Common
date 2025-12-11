@@ -1,16 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-      <Title>MA.Common</Title>
-      <Company>McLaren Applied</Company>
-      <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-      <Authors>McLaren Applied</Authors>
-      <Copyright></Copyright>
-      <Description>Library containing common utilities, classes and abstractions.</Description>
-	  <RepositoryUrl>https://github.com/mat-docs/packages</RepositoryUrl>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Title>MA.Common</Title>
+		<Company>Motion Applied</Company>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Authors>Motion Applied</Authors>
+		<Copyright></Copyright>
+		<Description>Library containing common utilities, classes and abstractions.</Description>
+		<RepositoryUrl>https://github.com/mat-docs/packages</RepositoryUrl>
+	</PropertyGroup>
 
 </Project>

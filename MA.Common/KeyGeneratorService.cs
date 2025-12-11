@@ -1,6 +1,6 @@
-// <copyright file="KeyGeneratorService.cs" company="McLaren Applied Ltd.">
+// <copyright file="KeyGeneratorService.cs" company="Motion Applied Ltd.">
 //
-// Copyright 2024 McLaren Applied Ltd
+// Copyright 2025 Motion Applied Ltd
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,18 +21,16 @@ namespace MA.Common
 {
     public class KeyGeneratorService : IKeyGeneratorService
     {
-
         private const string GeneratedKeyFileName = "key.info";
         private static readonly object LockObject = new();
         private static readonly object InitializationLockObject = new();
-        private ulong lastGeneratedUlongId;
-        private DateTime lastSnapshotTime = DateTime.UtcNow;
         private readonly bool canAccessFile;
         private readonly string filePath = GeneratedKeyFileName;
+        private ulong lastGeneratedUlongId;
+        private DateTime lastSnapshotTime = DateTime.UtcNow;
 
         public KeyGeneratorService(ILoggingDirectoryProvider loggingDirectoryProvider)
         {
-
             lock (InitializationLockObject)
             {
                 if (this.lastGeneratedUlongId != 0)
@@ -53,10 +51,12 @@ namespace MA.Common
                     {
                         Console.WriteLine("Can't Write Key.Info File");
                     }
+
                     this.lastSnapshotTime = snapshotTime;
                 }
 
-                if (!this.canAccessFile || !ulong.TryParse(File.ReadAllText(this.filePath), out this.lastGeneratedUlongId))
+                if (!this.canAccessFile ||
+                    !ulong.TryParse(File.ReadAllText(this.filePath), out this.lastGeneratedUlongId))
                 {
                     this.GenerateUniqueUlongId();
                 }
